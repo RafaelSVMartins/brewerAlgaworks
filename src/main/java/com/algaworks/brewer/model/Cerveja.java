@@ -11,10 +11,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
+
+import com.algaworks.brewer.validation.SKU;
 
 @Entity
 @Table(name="cerveja")
@@ -23,23 +31,32 @@ public class Cerveja {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
 	
+	@SKU
 	@NotBlank(message = "SKU é obrigatório")
 	private String sku;
 	
 	@NotBlank(message = "Nome é obrigatório")
 	private String nome;
 	
-	
+	@NotBlank(message = "A descrição é obrigatória")
 	@Size(min=1, max=50,message="Só pode até 50 caracteres!")
 	private String descricao;
 	
+	@NotNull(message="Valor é obrigatório")
+	@DecimalMin(value="0,50", message="O valor da cerveja deve ser maoir que R$0,50")
+	@DecimalMax(value="9999999.99", message="O valor da cerveja deve ser menor que R$9.999.999,99")
 	private BigDecimal valor;
 	
+	@NotNull(message = "O teor alcóolico é obrigatório")
+	@DecimalMax(value = "100.0", message = "O valor do teor alcóolico deve ser menor que 100")
 	@Column(name = "teor_alcoolico")
 	private BigDecimal teorAlcoolico;
 	
+	@DecimalMax(value = "100.0", message = "A comissão deve ser igual ou menor que 100")
 	private BigDecimal comissao;
 	
+	@NotNull(message="A quantidade em estoque é obrigatória")
+	@Max(value = 9999, message = "A quantidade em estoque deve ser menor que 9.999")
 	@Column(name="quantidade_estoque")
 	private Integer quantidadeEstoque;
 	
@@ -53,6 +70,10 @@ public class Cerveja {
 	@JoinColumn(name = "codigo_estilo")
 	private Estilo estilo;
 	
+	@PrePersist @PreUpdate
+	private void prePersistUpdate() {
+		sku = sku.toUpperCase();
+	}
 	public String getDescricao() {
 		return descricao;
 	}
