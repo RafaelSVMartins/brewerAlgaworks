@@ -21,9 +21,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.util.StringUtils;
 
 import com.algaworks.brewer.validation.SKU;
-
 @Entity
 @Table(name="cerveja")
 public class Cerveja {
@@ -43,7 +43,7 @@ public class Cerveja {
 	private String descricao;
 	
 	@NotNull(message="Valor é obrigatório")
-	@DecimalMin(value="0,50", message="O valor da cerveja deve ser maoir que R$0,50")
+	@DecimalMin(value="0.50", message="O valor da cerveja deve ser maoir que R$0,50")
 	@DecimalMax(value="9999999.99", message="O valor da cerveja deve ser menor que R$9.999.999,99")
 	private BigDecimal valor;
 	
@@ -52,6 +52,7 @@ public class Cerveja {
 	@Column(name = "teor_alcoolico")
 	private BigDecimal teorAlcoolico;
 	
+	@NotNull(message="A comissão é obrigatória!")
 	@DecimalMax(value = "100.0", message = "A comissão deve ser igual ou menor que 100")
 	private BigDecimal comissao;
 	
@@ -60,15 +61,23 @@ public class Cerveja {
 	@Column(name="quantidade_estoque")
 	private Integer quantidadeEstoque;
 	
+	@NotNull(message="A origem é obrigatória")
 	@Enumerated(EnumType.STRING)
 	private Origem origem;
 	
+	@NotNull(message="O sabor é obrigatório")
 	@Enumerated(EnumType.STRING)
 	private Sabor sabor;
 	
+	@NotNull(message="O estilo é obrigatório")
 	@ManyToOne
 	@JoinColumn(name = "codigo_estilo")
 	private Estilo estilo;
+	
+	private String foto;
+
+	@Column(name = "content_type")
+	private String contentType;
 	
 	@PrePersist @PreUpdate
 	private void prePersistUpdate() {
@@ -140,6 +149,26 @@ public class Cerveja {
 	public void setEstilo(Estilo estilo) {
 		this.estilo = estilo;
 	}
+	
+	
+	public String getFoto() {
+		return foto;
+	}
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+	public String getContentType() {
+		return contentType;
+	}
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
+	
+
+	public String getFotoOuMock() {
+		return !StringUtils.isEmpty(foto) ? foto : "thumbnail.cerveja-mock.png";
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

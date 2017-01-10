@@ -23,7 +23,7 @@ public class ClassForErrorAttributeTagProcessor extends AbstractAttributeTagProc
 		boolean temErro = FieldUtils.hasErrors(context,attributeValue);
 		if(temErro) {
 			String classsesExistentes = tag.getAttributeValue("class");
-			structureHandler.setAttribute("class", classsesExistentes + "has-error");
+			structureHandler.setAttribute("class", classsesExistentes + " has-error");
 		}
 	}
 

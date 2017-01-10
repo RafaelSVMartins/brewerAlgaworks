@@ -8,6 +8,7 @@
 	
 <head>
 	<title>Cadastro de cerveja</title>
+	<link th:href="@{/layout/stylesheets/vendors/upload.min.css}" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
@@ -15,12 +16,22 @@
 
 	<div class="page-header">
 		<div class="container-fluid">
-			<h1>
-				Cadastro de cerveja
-			</h1>
+			<div class="row">
+				<div class="col-sm-10">
+					<h1>Cadastro de cerveja</h1>
+				</div>
+			
+				<div class="col-sm-2">
+					<div class="aw-page-header-controls">
+						<a class="btn  btn-default" th:href="@{/cervejas}">
+							<i class="glyphicon  glyphicon-plus-sign"></i> <span class="hidden-xs  hidden-sm">Pesquisa</span>
+						</a>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
-
+	
 	<div class="container-fluid">
 
 		<!-- <div class="alert  alert-danger  alert-dismissible" role="alert">
@@ -28,11 +39,9 @@
 			<i class="fa  fa-exclamation-circle"></i> Já existe um produto com o nome informado.
 		</div> -->
 
-		<th:block th:include="fragments/MensagemSucesso"></th:block>
-		
 		<form method="POST" th:object="${cerveja}" class="form-vertical  js-form-loading">
-			<th:block th:include="fragments/MensagensErroValidacao"></th:block>
-	
+			<brewer:message/>
+			
 			<div class="row">
 				<div class="col-sm-2  form-group"  brewer:classforerror="sku">
 					<label for="sku">SKU</label>
@@ -119,6 +128,22 @@
 				</div>
 			</div>
 			
+			
+			<div class="row">
+				<div class="form-group  col-sm-12">
+				<input type="hidden" th:field="*{foto}">
+					<input type="hidden" th:field="*{contentType}">
+					<label class="control-label">Foto</label> 
+					<div class="js-container-foto-cerveja" th:attr="data-url-fotos=@{/fotos}">                                                                                                                  
+					<div id="upload-drop" class="bw-upload">
+						<i class="glyphicon  glyphicon-cloud-upload"></i>
+						<span>Arraste a foto aqui ou </span>
+						<a class="bw-upload-form-file">selecione <input id="upload-select" type="file" accept=".jpg,.jpeg,.png"/></a>
+					</div>
+				</div>
+				</div>
+			</div>
+			
 			<div class="form-group">
 				<button class="btn  btn-primary" type="submit">Salvar</button>
 			</div>
@@ -127,10 +152,16 @@
 	</div>
 	
 	<div th:replace="estilo/CadastroRapidoEstilo :: modal"></div>
+	<th:block th:replace="hbs/FotoCerveja"></th:block>
 </section>
 	
 	<th:block layout:fragment="javascript-extra">
 		<script th:src="@{/layout/javascripts/estilo.cadastro-rapido.js}"></script>
+		<script th:src="@{/layout/javascripts/uikit.min.js}"></script>
+		<script th:src="@{/layout/javascripts/upload.min.js}"></script>
+		<script th:src="@{/layout/javascripts/handlebars.min.js}"></script>
+		<script th:src="@{/layout/javascripts/cerveja.upload-foto.js}"></script>
 	</th:block>
+
 </body>
 </html>
